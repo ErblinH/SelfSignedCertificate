@@ -58,7 +58,7 @@ public class CertificateService : ICertificateService
     {
         Log.Information("Started to retrieve the document with name={GuidName}", name);
 
-        return await _certificateRepository.GetAsync(query => query.Where(cert => cert.Name == name));
+        return await _certificateRepository.GetAsync(query => query.Where(cert => cert.Name == name), name.ToString());
     }
 
     #endregion Get
@@ -80,7 +80,7 @@ public class CertificateService : ICertificateService
     {
         Log.Information("Started to check the document signature with name={GuidName}", name);
 
-        var retrievedCertificate = await _certificateRepository.GetAsync(query => query.Where(cert => cert.Name == name));
+        var retrievedCertificate = await _certificateRepository.GetAsync(query => query.Where(cert => cert.Name == name), name.ToString());
 
         var keyPairs = DeserializeKeyPair(retrievedCertificate.KeyPairs);
 

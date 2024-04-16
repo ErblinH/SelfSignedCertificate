@@ -1,10 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces.Caching;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Data.Repositories;
 
@@ -43,9 +39,9 @@ public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEnt
         }
     }
 
-    public virtual async Task<TEntity> GetAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
+    public virtual async Task<TEntity> GetAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null, string key = null)
     {
-        return await _redisCachingService.GetOrSetCacheItemAsync("GetCertificate", () => GetFromDbAsync(func));
+        return await _redisCachingService.GetOrSetCacheItemAsync($"GetCertificate_{key}", () => GetFromDbAsync(func));
     }
 
     private async Task<IList<TEntity>> GetAllFromDbAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null)
