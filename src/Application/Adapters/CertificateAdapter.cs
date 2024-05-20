@@ -20,6 +20,7 @@ public static class CertificateAdapter
         certificate.FilePath = createAndSignRequest.FilePath;
         certificate.ValidFrom = createAndSignRequest.ValidFrom;
         certificate.ValidUntil = createAndSignRequest.ValidUntil;
+        certificate.CreationDateTime = DateTime.UtcNow;
 
         return certificate;
     }

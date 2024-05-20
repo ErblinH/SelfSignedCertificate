@@ -108,7 +108,7 @@ public class CertificateService : ICertificateService
 
     private static X509Certificate GenerateSelfSignedCertificate(out AsymmetricCipherKeyPair keyPair)
     {
-        // Generate a key pair used for RSA hashing function
+        // Generate a key pair used for RSA function
         var keyGenerationParameters = new KeyGenerationParameters(new SecureRandom(), 2048);
         var keyPairGenerator = new RsaKeyPairGenerator();
         keyPairGenerator.Init(keyGenerationParameters);
