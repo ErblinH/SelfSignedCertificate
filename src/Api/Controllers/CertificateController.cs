@@ -2,12 +2,14 @@ using Domain.ElasticSearch;
 using Domain.Entities;
 using Domain.Interfaces.Service;
 using Domain.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize("ClientIdPolicy")]
     public class CertificateController : ControllerBase
     {
 

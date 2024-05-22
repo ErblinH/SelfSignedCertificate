@@ -9,6 +9,7 @@ using Infrastructure;
 using Infrastructure.Caching;
 using Infrastructure.ElasticSearch;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
@@ -32,6 +33,21 @@ builder.Services.AddHostedService<ElasticSearchHostedService>();
 builder.Services.AddHostedService<RedisCachingHostedService>();
 
 builder.Services.AddControllers();
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = "https://localhost:7168";
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddAuthorization(option =>
+{
+    option.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "certificateClient"));
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -82,6 +98,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
