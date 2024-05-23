@@ -1,9 +1,14 @@
 ﻿using Client.ApiServices;
 using Client.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Client.Controllers
 {
+    //[Authorize]
     public class CertificatesController : Controller
     {
         private readonly ICertificateApiService _certificateApiService;
@@ -16,7 +21,26 @@ namespace Client.Controllers
         // GET: Certificates
         public async Task<IActionResult> Index()
         {
+            await LogTokenAndClaims();
             return View(await _certificateApiService.GetAllCertificatesAsync());
+        }
+
+        public async Task LogTokenAndClaims()
+        {
+            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+
+            Console.WriteLine($"Identity token: {identityToken}");
+
+            foreach (var claim in User.Claims)
+            {
+                Console.WriteLine($"Claim types: {claim.Type} - Claim value: {claim.Value}");
+            }
+        }
+
+        public async Task Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         // GET: Certificates/Details/5

@@ -46,7 +46,7 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthorization(option =>
 {
-    option.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "certificateClient"));
+    option.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "certificate_mvc_client"));
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -70,8 +70,6 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Services.AddLogging();
-
-//var ok = "Server=localhost;Database=cert;User=root;Password=admin;";
 
 builder.Services.AddDbContext<CertificateDbContext>(options =>
     options.UseMySql(connections.ContextDatabase.ConnectionString, ServerVersion.AutoDetect(connections.ContextDatabase.ConnectionString), b => b.MigrationsAssembly("Data")));
