@@ -1,5 +1,4 @@
 ﻿using Client.ApiServices;
-using Client.HttpHandler;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -7,7 +6,6 @@ using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ICertificateApiService, CertificateApiService>();
@@ -35,14 +33,12 @@ builder.Services.AddAuthentication(options =>
     options.GetClaimsFromUserInfoEndpoint = true;
 });
 
-builder.Services.AddTransient<AuthenticationDelegatingHandler>();
-
 builder.Services.AddHttpClient("CertificateAPIClient", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7188/");
     client.DefaultRequestHeaders.Clear();
     client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
-});//.AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+});
 
 builder.Services.AddHttpClient("IDPClient", client =>
 {
@@ -63,7 +59,6 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
